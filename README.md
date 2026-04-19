@@ -1,3 +1,5 @@
+## RUN THIS PLEASEEEEEEEEE `pip install -r requirements.txt`
+
 # ***ONION***
 *meant for video editing but liek you can do anything with it idc*
 
