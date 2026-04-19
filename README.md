@@ -1,7 +1,9 @@
-## RUN THIS PLEASEEEEEEEEE `pip install -r requirements.txt`
+## Setup (READ PLEASEEEE)
+once you download, go to the `[Onion-main]` folder and open it in the terminal, and run this command; `python -m pip install -r requirements.txt`. now to open the application, put this in the terminal `python OnionMain.py`. 
+
 
 ***
-DISCLAIMER: I have a windows laptop so idk if it'll work on linux or mac. if you're not using windows, delete pywin32, or it'll error up
+**DISCLAIMER: I have a windows laptop so idk if it'll work on linux or mac. if you're not using windows, delete pywin32, or it'll error up**
 ***
 # ***ONION***
 *meant for video editing but liek you can do anything with it idc*

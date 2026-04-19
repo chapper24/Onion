@@ -43,7 +43,6 @@ class VideoDownloaderApp(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW", self.save_data)
 
         current_scale = self._get_window_scaling()
-        print(current_scale)
         ctk.set_widget_scaling(2/current_scale)
         ctk.set_window_scaling(2/current_scale)
 
@@ -240,6 +239,38 @@ class VideoDownloaderApp(ctk.CTk):
             x=(int(GEOMETRY_X)/2) + 127,
             y=255
         )
+
+        # down icon because the orginial down arrow for ctk sucks so badly so im resulting to gaslighting
+        self.pil_down_icon = Image.open("Images/DownIcon.png")
+        self.itk_down_icon = ImageTk.PhotoImage(self.pil_down_icon)
+        self.down_icon_label = ctk.CTkLabel(
+            self,
+            image=ctk.CTkImage(self.pil_down_icon),
+            text="",
+            fg_color=BUTTON2_COLOR,
+            corner_radius=5,
+            height=28,
+            width=28
+        )
+        self.down_icon_label.place(x=(int(GEOMETRY_X)/2) + 170, y=255)
+
+        # left corner isnt filled so lets fix that
+        self.down_corner = ctk.CTkLabel(
+            self,
+            text="",
+            fg_color=BUTTON2_COLOR,
+            height=28,
+            width=4
+        )
+        self.down_corner.place(x=(int(GEOMETRY_X) / 2) + 169, y=255)
+
+        self.down_icon_label.bind("<Button-1>", lambda event: self.format_menu._clicked())
+        self.down_icon_label.bind("<Enter>",  self.down_hover_enter)
+        self.down_icon_label.bind("<Leave>", self.down_hover_exit)
+
+        self.down_corner.bind("<Button-1>", lambda event: self.format_menu._clicked())
+        self.down_corner.bind("<Enter>", self.down_hover_enter)
+        self.down_corner.bind("<Leave>", self.down_hover_exit)
 
         # pregress bar
         self.progress_bar = ctk.CTkProgressBar(
@@ -593,6 +624,16 @@ class VideoDownloaderApp(ctk.CTk):
 
             self.hide_widget(self.is_music_toggle, True)
             self.focus()
+
+
+    # gas lighting because the original icon on the option menu is so bad im changing it like this
+    def down_hover_enter(self, arg):
+        self.down_icon_label.configure(fg_color=BUTTON_HOVER_COLOR)
+        self.down_corner.configure(fg_color=BUTTON_HOVER_COLOR)
+
+    def down_hover_exit(self, arg):
+        self.down_icon_label.configure(fg_color=BUTTON2_COLOR)
+        self.down_corner.configure(fg_color=BUTTON2_COLOR)
 
 
     # since base and video use the same textbox, we gotta make sure which is which for saving data!!
