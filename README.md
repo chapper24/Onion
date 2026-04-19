@@ -1,5 +1,5 @@
 ## Setup (READ PLEASEEEE)
-once you download, go to the `[Onion]` folder and open it in the terminal, and run this command; `python -m pip install -r requirements.txt`. now to open the application, put this in the terminal `python OnionMain.py`. 
+once you download, go to the `[Onion]` folder and open it in the terminal, and run this command; `python -m pip install -r requirements.txt`. now to open the application, open `[OnionMain.py]` or put `python OnionMain.py` in the terminal. ;)
 
 
 ***
