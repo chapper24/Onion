@@ -41,9 +41,11 @@ class VideoDownloaderApp(ctk.CTk):
         super().__init__()
 
         self.protocol("WM_DELETE_WINDOW", self.save_data)
+        ctk.set_widget_scaling(1.0)
+        ctk.set_window_scaling(1.0)
 
         # the data frfr
-        with open('data.json', 'r') as f:
+        with open('Data.json', 'r') as f:
             self.data = json.load(f)
 
         # sigma file selelelctor
@@ -595,7 +597,7 @@ class VideoDownloaderApp(ctk.CTk):
         else:
             self.data["base_path"] = self.video_fpb.new_entry.get()
 
-        with open('data.json', 'w') as f:
+        with open('Data.json', 'w') as f:
             json.dump(self.data, f, indent=2)
 
 
@@ -837,7 +839,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.data["music_threshold"] = self.music_threshold_entry.get()
 
         # ok now copy the new data to the json!!
-        with open('data.json', 'w') as f:
+        with open('Data.json', 'w') as f:
             json.dump(self.data, f, indent=2)
 
         # now delete the window because we saved :)
