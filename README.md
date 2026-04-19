@@ -1,12 +1,18 @@
 ## Setup (READ PLEASEEEE)
-once you download, go to the `[Onion]` folder and open it in the terminal, and run this command; `python -m pip install -r requirements.txt`. now to open the application, open `[OnionMain.py]` or put `python OnionMain.py` in the terminal. ;)
 
+**Windows Setup**
+
+go to `[Onion]` file, open [`Onion.exe`] and it'll open! :D
+
+**Linux Setup**
+<sub>(might work for mac too, but it isn't tested)<sub>
+
+go to the `[Onion]` folder and open it in the terminal, and run this command; `python -m pip install -r requirements.txt`. now to open the application, open `[OnionMain.py]` but if it doesn't work, do `python OnionMain.py` in the terminal instead! :D
 
 ***
-**DISCLAIMER: I have a windows laptop so idk if it'll work on linux or mac. if you're not using windows, delete pywin32, or it'll error up**
-***
+
 # ***ONION***
-*meant for video editing but liek you can do anything with it idc*
+*Built for video editing, and was made by a video editor :)*
 
 ### *"not malware trust me bro"* - onion
 
@@ -23,7 +29,7 @@ Includes:
 ***
 
 
-**HOW TO USE!!!**
+## HOW TO USE
 
 1. put link the link box thing
 2. select the path you want it to go to or it goes to downloads
@@ -33,8 +39,15 @@ Includes:
 
 ***
 
-**COOL SETTINGS!!! WOW!!!**
+## COOL SETTINGS!!! WOW!!!
 
 1. separate video and audio paths ! so metaverse!!!
 2. separate sound and music paths ! if sound over threshold it'll be marked as music, and goes into the music folder you assigned
 3. music threshold ! automatically sets the sound to be marked as [ MUSIC ] but you can press the checkbox unmark it. if set to 0 it just wont mark anything, so you gotta do it manually
+
+***
+
+## Contributors :D
+
+- **Chapper24** *coded the entire thing lmao*
+- **Frosoto** *tested and helped with linux support, also added an extra onion to the README because why not*
