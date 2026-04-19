@@ -12,6 +12,7 @@ from pytubefix import YouTube
 from threading import Thread
 from PIL import Image, ImageTk
 from tkinter import filedialog
+from tkinter import PhotoImage
 
 BUTTON_COLOR = "#b361fa"
 BUTTON2_COLOR = "#bd74fc"
@@ -104,7 +105,9 @@ class VideoDownloaderApp(ctk.CTk):
         self.title("thy onion")
         self.geometry(GEOMETRY_X + "x" + GEOMETRY_Y)
         self.configure(fg_color=BACKGROUND_COLOR)
-        self.iconbitmap("OnionIcon.ico")
+
+        self.icon_image = PhotoImage(file='OnionIcon.png')  # Storing it in self keeps it alive
+        self.after(200, lambda: self.iconphoto(False, self.icon_image))
 
         # other
         self.widget_positions = {}
