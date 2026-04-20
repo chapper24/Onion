@@ -1,4 +1,6 @@
 import os
+import sys
+import subprocess
 import warnings
 import PIL.Image
 import ffmpeg
@@ -13,6 +15,7 @@ from threading import Thread
 from PIL import Image, ImageTk
 from tkinter import filedialog
 from tkinter import PhotoImage
+from ffmpeg import _run
 
 BUTTON_COLOR = "#b361fa"
 BUTTON2_COLOR = "#bd74fc"
@@ -36,6 +39,31 @@ FRAME_MS_TIME = 225
 
 pytubefix.request.default_range_size = 1048576
 
+if sys.platform == "win32":
+    def patched_run_async(stream_spec, cmd='ffmpeg', pipe_stdin=False, pipe_stdout=False,
+                          pipe_stderr=False, quiet=False, overwrite_output=False):
+        args = _run.compile(stream_spec, cmd, overwrite_output=overwrite_output)
+        return subprocess.Popen(
+            args,
+            stdin=subprocess.PIPE if pipe_stdin else None,
+            stdout=subprocess.PIPE if pipe_stdout or quiet else None,
+            stderr=subprocess.PIPE if pipe_stderr or quiet else None,
+            creationflags=0x08000000
+        )
+
+    _run.run_async = patched_run_async
+
+
+# for ffmpeg to work with the .exe fr
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 class VideoDownloaderApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -47,7 +75,7 @@ class VideoDownloaderApp(ctk.CTk):
         ctk.set_window_scaling(2/current_scale)
 
         # the data frfr
-        with open('Data.json', 'r') as f:
+        with open(resource_path("Data.json"), 'r') as f:
             self.data = json.load(f)
 
         # sigma file selelelctor
@@ -66,7 +94,7 @@ class VideoDownloaderApp(ctk.CTk):
                     placeholder_text_color=BOX_TEMP_TEXT_COLOR
                 )
 
-                pil_folder = PIL.Image.open("Images/FolderOpen.png")
+                pil_folder = PIL.Image.open(resource_path("Images/FolderOpen.png"))
                 itk_folder = ImageTk.PhotoImage(pil_folder)
 
                 self.new_button = ctk.CTkButton(
@@ -105,7 +133,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.geometry(GEOMETRY_X + "x" + GEOMETRY_Y)
         self.configure(fg_color=BACKGROUND_COLOR)
 
-        self.icon_image = PhotoImage(file='Images/OnionIcon.png')  # Storing it in self keeps it alive
+        self.icon_image = PhotoImage(file=resource_path("Images/OnionIcon.png"))  # Storing it in self keeps it alive
         self.after(200, lambda: self.iconphoto(False, self.icon_image))
 
         # other
@@ -123,7 +151,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.canvas.place(relwidth=1, relheight=1)
 
         # background
-        self.pil_bg = Image.open("Images/GrassBackground.png").resize((1200, 1200))
+        self.pil_bg = Image.open(resource_path("Images/GrassBackground.png")).resize((1200, 1200))
         self.itk_bg = ImageTk.PhotoImage(self.pil_bg)
         self.bg1 = self.canvas.create_image(
             0,
@@ -142,7 +170,7 @@ class VideoDownloaderApp(ctk.CTk):
         )
 
         # it's him
-        self.pil_onion = Image.open("Images/OnionIcon.png").resize((500, 300))
+        self.pil_onion = Image.open(resource_path("Images/OnionIcon.png")).resize((500, 300))
         self.itk_onion = ImageTk.PhotoImage(self.pil_onion)
         self.onion = self.canvas.create_image(
             (int(GEOMETRY_X)), # x position
@@ -153,7 +181,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.canvas.tag_bind(self.onion, "<Button-1>", self.onion_click)
 
         # ???
-        self.pil_l = Image.open("Images/Lm.png").resize((400, 400))
+        self.pil_l = Image.open(resource_path("Images/Lm.png")).resize((400, 400))
         self.itk_l = ImageTk.PhotoImage(self.pil_l)
         self.l = self.canvas.create_image(
             (int(GEOMETRY_X)), # x position
@@ -241,7 +269,7 @@ class VideoDownloaderApp(ctk.CTk):
         )
 
         # down icon because the orginial down arrow for ctk sucks so badly so im resulting to gaslighting
-        self.pil_down_icon = Image.open("Images/DownIcon.png")
+        self.pil_down_icon = Image.open(resource_path("Images/DownIcon.png"))
         self.itk_down_icon = ImageTk.PhotoImage(self.pil_down_icon)
         self.down_icon_label = ctk.CTkLabel(
             self,
@@ -334,7 +362,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.video_fpb.new_button.bind("<Button-1>", self.base_path_check)
 
         # video icon
-        self.pil_video_icon = Image.open("Images/VideoIcon.png")
+        self.pil_video_icon = Image.open(resource_path("Images/VideoIcon.png"))
         self.itk_video_icon = ImageTk.PhotoImage(self.pil_video_icon)
         self.video_icon = self.canvas.create_image(
             (int(GEOMETRY_X)) + 20,  # x position
@@ -352,7 +380,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.sound_fpb.new_entry.insert(0, self.data["sound_path"])
 
         # sound icon
-        self.pil_sound_icon = Image.open("Images/SoundIcon.png")
+        self.pil_sound_icon = Image.open(resource_path("Images/SoundIcon.png"))
         self.itk_sound_icon = ImageTk.PhotoImage(self.pil_sound_icon)
         self.sound_icon = self.canvas.create_image(
             (int(GEOMETRY_X))+20,  # x position
@@ -370,7 +398,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.music_fpb.new_entry.insert(0, self.data["music_path"])
 
         # music icon
-        self.pil_music_icon = Image.open("Images/MusicIcon.png")
+        self.pil_music_icon = Image.open(resource_path("Images/MusicIcon.png"))
         self.itk_music_icon = ImageTk.PhotoImage(self.pil_music_icon)
         self.music_icon = self.canvas.create_image(
             (int(GEOMETRY_X)) + 20,  # x position
@@ -643,13 +671,13 @@ class VideoDownloaderApp(ctk.CTk):
         else:
             self.data["base_path"] = self.video_fpb.new_entry.get()
 
-        with open('Data.json', 'w') as f:
+        with open(resource_path("Data.json"), 'w') as f:
             json.dump(self.data, f, indent=2)
 
 
     # onion is watching 👀
     def onion_click(self, arg):
-        playsound.playsound("Sounds/ImWatchingYou.mp3", block=False)
+        playsound.playsound(resource_path("Sounds/ImWatchingYou.mp3"), block=False)
 
 
     # get video if it exists fr
@@ -781,7 +809,6 @@ class VideoDownloaderApp(ctk.CTk):
         else:
             return self.file_path_base
 
-
     # threading so nerdy heh
     def start_download_thread(self):
         thread = Thread(target=self.download_video)
@@ -824,7 +851,7 @@ class VideoDownloaderApp(ctk.CTk):
 
                 temp_file = audio_stream.download(output_path=self.project_folder, filename="temp_audio_file")
 
-                ffmpeg_exe = os.path.join(self.project_folder, "ffmpeg", "ffmpeg.exe")
+                ffmpeg_exe = resource_path(os.path.join("ffmpeg", "ffmpeg.exe"))
 
                 self.progress_entry.configure(state="normal")
                 self.progress_entry.configure(placeholder_text=f"converting to {file_type}...")
@@ -855,8 +882,10 @@ class VideoDownloaderApp(ctk.CTk):
 
         except Exception as e:
             self.progress_entry.configure(state="normal")
-            self.progress_entry.configure(placeholder_text="error!! i dont think that link was valid... :(")
+            self.progress_entry.configure(placeholder_text=f"error: {e}")
             self.progress_entry.configure(state="readonly")
+            self.progress_bar.set(0)
+            self.progress_bar.stop()
         finally:
             self.download_button.configure(state="normal")
 
@@ -885,7 +914,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.data["music_threshold"] = self.music_threshold_entry.get()
 
         # ok now copy the new data to the json!!
-        with open('Data.json', 'w') as f:
+        with open(resource_path("Data.json"), 'w') as f:
             json.dump(self.data, f, indent=2)
 
         # now delete the window because we saved :)
