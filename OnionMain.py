@@ -37,6 +37,7 @@ GEOMETRY_Y = "500"
 
 FRAME_MS_TIME = 225
 
+global EVIL_MODE
 EVIL_MODE = False
 
 pytubefix.request.default_range_size = 1048576
@@ -131,7 +132,10 @@ class VideoDownloaderApp(ctk.CTk):
                     return file_path
 
         # window
-        self.title("thy onion")
+        if EVIL_MODE:
+            self.title("evil thy onion")
+        else:
+            self.title("thy onion")
         self.geometry(GEOMETRY_X + "x" + GEOMETRY_Y)
         self.configure(fg_color=BACKGROUND_COLOR)
 
