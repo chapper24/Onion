@@ -86,7 +86,7 @@ class VideoDownloaderApp(ctk.CTk):
 
                 self.new_entry = ctk.CTkEntry(
                     self.master,
-                    placeholder_text="output path",
+                    placeholder_text=self.master.text("output path"),
                     width=150,
                     fg_color=BOX_COLOR,
                     border_color=BOX_BORDER_COLOR,
@@ -120,7 +120,7 @@ class VideoDownloaderApp(ctk.CTk):
 
 
             def open_explorer(self):
-                file_path = filedialog.askdirectory(title="pick where you want the file to go to fr")
+                file_path = filedialog.askdirectory(title=self.master.text("pick where you want the file to go to fr"))
 
                 if file_path:
                     self.new_entry.delete(0, "end")
@@ -128,12 +128,19 @@ class VideoDownloaderApp(ctk.CTk):
 
                     return file_path
 
+        # determine evil mode before setting title
+        self.evil_mode = (random.randint(1, 69420) == 69420)
+
         # window
-        self.title("thy onion")
+        if self.evil_mode:
+            self.title("evil thy onion")
+        else:
+            self.title("thy onion")
         self.geometry(GEOMETRY_X + "x" + GEOMETRY_Y)
         self.configure(fg_color=BACKGROUND_COLOR)
 
-        self.icon_image = PhotoImage(file=resource_path("Images/OnionIcon.png"))  # Storing it in self keeps it alive
+        icon_path = "Images/EvilOnionIcon.png" if self.evil_mode else "Images/OnionIcon.png"
+        self.icon_image = PhotoImage(file=resource_path(icon_path))  # Storing it in self keeps it alive
         self.after(200, lambda: self.iconphoto(False, self.icon_image))
 
         # other
@@ -170,7 +177,10 @@ class VideoDownloaderApp(ctk.CTk):
         )
 
         # it's him
-        self.pil_onion = Image.open(resource_path("Images/OnionIcon.png")).resize((500, 300))
+        if self.evil_mode:
+            self.pil_onion = Image.open(resource_path("Images/EvilOnionIcon.png")).resize((500, 300))
+        else:
+            self.pil_onion = Image.open(resource_path("Images/OnionIcon.png")).resize((500, 300))
         self.itk_onion = ImageTk.PhotoImage(self.pil_onion)
         self.onion = self.canvas.create_image(
             (int(GEOMETRY_X)), # x position
@@ -194,7 +204,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.label1 = self.canvas.create_text(
             (int(GEOMETRY_X)), # x position
             40, # y position
-            text="Onion downloada",
+            text=self.text("Onion downloada"),
             font="Helvetica 35 bold",
             fill=MESSAGE_COLOR2,
             anchor="center"
@@ -204,7 +214,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.label2 = self.canvas.create_text(
             (int(GEOMETRY_X)), # x position
             740, # y position
-            text="im watching you",
+            text=self.text("im watching you"),
             font="Helvetica 20",
             fill=MESSAGE_COLOR
         )
@@ -213,7 +223,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.video_title_label = self.canvas.create_text(
             200,  # x position
             200,  # y position
-            text="no video detected... :(",
+            text=self.text("no video detected... :("),
             font="Helvetica 20",
             fill=MESSAGE_COLOR2,
             width=350,
@@ -224,7 +234,7 @@ class VideoDownloaderApp(ctk.CTk):
         # link entry
         self.link_entry = ctk.CTkEntry(
             self,
-            placeholder_text="youtube video link here!",
+            placeholder_text=self.text("youtube video link here!"),
             width=400,
             fg_color=BOX_COLOR,
             border_color=BOX_BORDER_COLOR,
@@ -240,7 +250,7 @@ class VideoDownloaderApp(ctk.CTk):
         # name entry
         self.name_entry = ctk.CTkEntry(
             self,
-            placeholder_text="file name here! (if its blank it'll just be the title)",
+            placeholder_text=self.text("file name here! (if its blank it'll just be the title)"),
             width=325,
             fg_color=BOX_COLOR,
             border_color=BOX_BORDER_COLOR,
@@ -255,14 +265,14 @@ class VideoDownloaderApp(ctk.CTk):
         # format menu
         self.format_menu = ctk.CTkOptionMenu(
             self,
-            values=[".mp4", ".mp3", ".wav"],
+            values=["evil .mp4", "evil .mp3", "evil .wav"] if self.evil_mode else [".mp4", ".mp3", ".wav"],
             fg_color=BUTTON_COLOR,
             button_color=BUTTON2_COLOR,
             button_hover_color=BUTTON_HOVER_COLOR,
             command=self.format_changed,
             width=72
         )
-        self.format_menu.set(".mp4")
+        self.format_menu.set("evil .mp4" if self.evil_mode else ".mp4")
         self.format_menu.place(
             x=(int(GEOMETRY_X)/2) + 127,
             y=255
@@ -322,7 +332,7 @@ class VideoDownloaderApp(ctk.CTk):
             text_color=READ_ONLY_TEXT_COLOR,
             placeholder_text_color=READ_ONLY_TEXT_COLOR,
             fg_color=READ_ONLY_BG_COLOR,
-            placeholder_text="download progress will go here, start downloading!",
+            placeholder_text=self.text("download progress will go here, start downloading!"),
         )
         self.progress_entry.place(
             x=100,
@@ -333,7 +343,7 @@ class VideoDownloaderApp(ctk.CTk):
         # download button
         self.download_button = ctk.CTkButton(
             self,
-            text="Download",
+            text=self.text("Download"),
             command=self.start_download_thread,
             fg_color=BUTTON_COLOR,
             hover_color=BUTTON_HOVER_COLOR,
@@ -412,7 +422,7 @@ class VideoDownloaderApp(ctk.CTk):
             self,
             100,
             10,
-            text="is music",
+            text=self.text("is music"),
             command=self.separate_music_sound_setting,
             fg_color=BUTTON_COLOR,
             hover_color=BUTTON_HOVER_COLOR
@@ -425,7 +435,7 @@ class VideoDownloaderApp(ctk.CTk):
         # setting button
         self.settings_button = ctk.CTkButton(
             self,
-            text="Settings",
+            text=self.text("Settings"),
             fg_color=BUTTON_COLOR,
             hover_color=BUTTON_HOVER_COLOR
         )
@@ -452,7 +462,7 @@ class VideoDownloaderApp(ctk.CTk):
             self.settings_frame,
             100,
             10,
-            text="Separate video and sound output paths",
+            text=self.text("Separate video and sound output paths"),
             command=self.separate_paths_setting,
             fg_color=BUTTON_COLOR,
             hover_color=BUTTON_HOVER_COLOR
@@ -468,7 +478,7 @@ class VideoDownloaderApp(ctk.CTk):
             self.settings_frame,
             100,
             10,
-            text="Separate sound and music output paths",
+            text=self.text("Separate sound and music output paths"),
             command=self.separate_music_sound_setting,
             fg_color=BUTTON_COLOR,
             hover_color=BUTTON_HOVER_COLOR
@@ -483,7 +493,7 @@ class VideoDownloaderApp(ctk.CTk):
         # music threshold setting
         self.music_threshold_entry = ctk.CTkEntry(
             self.settings_frame,
-            placeholder_text="30 (recommended)",
+            placeholder_text=self.text("30 (recommended)"),
             width=130
         )
         self.music_threshold_entry.place(x=110, y=90)
@@ -495,13 +505,13 @@ class VideoDownloaderApp(ctk.CTk):
 
         self.music_setting_label1 = ctk.CTkLabel(
             self.settings_frame,
-            text="Music threshold:"
+            text=self.text("Music threshold:")
         )
         self.music_setting_label1.place(x=10, y=90)
 
         self.music_setting_label2 = ctk.CTkLabel(
             self.settings_frame,
-            text="(this will automatically mark your sound as music if the length of it is over the threshold. if it isn't correct, you can manually change it. set to 0 if you always want to manually decide)",
+            text=self.text("(this will automatically mark your sound as music if the length of it is over the threshold. if it isn't correct, you can manually change it. set to 0 if you always want to manually decide)"),
             font=("Helvetica", 9),
             wraplength=380
         )
@@ -543,6 +553,17 @@ class VideoDownloaderApp(ctk.CTk):
 
 
     # ----------------------- functions ----------------------- #
+
+    def text(self, text):
+        if self.evil_mode:
+            return f"evil {text}"
+        return text
+
+    def selected_format(self):
+        selected = self.format_menu.get()
+        if selected.startswith("evil "):
+            return selected[5:]
+        return selected
 
     # on hover for settings button idk
     hide_timer = None
@@ -637,7 +658,7 @@ class VideoDownloaderApp(ctk.CTk):
             self.hide_widget(self.music_setting_label2, False)
             self.hide_widget(self.music_threshold_entry, False)
 
-            if self.format_menu.get() != ".mp4":
+            if self.selected_format() != ".mp4":
                 self.hide_widget(self.is_music_toggle, False)
 
         else:
@@ -689,13 +710,13 @@ class VideoDownloaderApp(ctk.CTk):
         if yt:
             return yt
         else:
-            print("no video detected!! D:")
+            print(self.text("no video detected!! D:"))
             return None
 
 
     # who is this?
     def auto_define_music(self):
-        format = self.format_menu.get()
+        format = self.selected_format()
 
         yt = None
         try:
@@ -707,18 +728,18 @@ class VideoDownloaderApp(ctk.CTk):
             try:
                 if self.music_threshold_entry.get() == "":
                     threshold = 30
-                    print("theres no threshold put in, so its gonna be 30 lol")
+                    print(self.text("theres no threshold put in, so its gonna be 30 lol"))
                 else:
                     threshold = int(self.music_threshold_entry.get())
             except:
-                warnings.warn("threshold is NOT a valid number, defaulted to 30!! >:(")
+                warnings.warn(self.text("threshold is NOT a valid number, defaulted to 30!! >:("))
                 threshold = 30
 
             if yt.length >= threshold:
-                print("its over the threshold, so it's probably music")
+                print(self.text("its over the threshold, so it's probably music"))
                 self.is_music_toggle.select()
             else:
-                print("probably not, its under the threshold")
+                print(self.text("probably not, its under the threshold"))
                 self.is_music_toggle.deselect()
 
 
@@ -729,7 +750,7 @@ class VideoDownloaderApp(ctk.CTk):
 
     # detect when file format type changes
     def format_changed(self, arg):
-        format = self.format_menu.get()
+        format = self.selected_format()
 
         self.auto_define_music()
 
@@ -768,7 +789,7 @@ class VideoDownloaderApp(ctk.CTk):
             if yt:
                 self.canvas.itemconfig(self.video_title_label, text=yt.title)
         except:
-            self.canvas.itemconfig(self.video_title_label, text="no video detected... :(")
+            self.canvas.itemconfig(self.video_title_label, text=self.text("no video detected... :("))
             pass
 
 
@@ -779,12 +800,12 @@ class VideoDownloaderApp(ctk.CTk):
         percentage = bytes_downloaded / total_size
 
         self.progress_entry.configure(state="normal")
-        self.progress_entry.configure(placeholder_text=f"{int(percentage * 100)}%")
+        self.progress_entry.configure(placeholder_text=self.text(f"{int(percentage * 100)}%"))
         self.progress_entry.configure(state="readonly")
 
         if random.randint(1, 500) == 1:
             self.progress_entry.configure(state="normal")
-            self.progress_entry.configure(placeholder_text=f"INSTALLING EVIL MALWARE MAUHAHAH!!! ...jk")
+            self.progress_entry.configure(placeholder_text=self.text("INSTALLING EVIL MALWARE MAUHAHAH!!! ...jk"))
             self.progress_entry.configure(state="readonly")
 
         self.progress_bar.set(percentage)
@@ -792,7 +813,7 @@ class VideoDownloaderApp(ctk.CTk):
 
     # get the correct file path when downloading fr
     def get_download_path(self):
-        file_type = self.format_menu.get()
+        file_type = self.selected_format()
 
         self.file_path_video = self.video_fpb.new_entry.get()
         self.file_path_sound = self.sound_fpb.new_entry.get()
@@ -819,11 +840,11 @@ class VideoDownloaderApp(ctk.CTk):
     def download_video(self):
         link = self.link_entry.get()
         name = self.name_entry.get()
-        file_type = self.format_menu.get()
+        file_type = self.selected_format()
 
         if not link:
             self.progress_entry.configure(state="normal")
-            self.progress_entry.configure(placeholder_text="i think you're forgetting something..? ծ_ô")
+            self.progress_entry.configure(placeholder_text=self.text("i think you're forgetting something..? ծ_ô"))
             self.progress_entry.configure(state="readonly")
             return
 
@@ -854,7 +875,7 @@ class VideoDownloaderApp(ctk.CTk):
                 ffmpeg_exe = resource_path(os.path.join("ffmpeg", "ffmpeg.exe"))
 
                 self.progress_entry.configure(state="normal")
-                self.progress_entry.configure(placeholder_text=f"converting to {file_type}...")
+                self.progress_entry.configure(placeholder_text=self.text(f"converting to {file_type}..."))
                 self.progress_entry.configure(state="readonly")
 
                 input_file = ffmpeg.input(temp_file)
@@ -873,7 +894,7 @@ class VideoDownloaderApp(ctk.CTk):
 
             # when the download is done
             self.progress_entry.configure(state="normal")
-            self.progress_entry.configure(placeholder_text=f"downloaded to {final_path}!")
+            self.progress_entry.configure(placeholder_text=self.text(f"downloaded to {final_path}!"))
             self.progress_entry.configure(state="readonly")
 
             self.progress_bar.configure(mode="determinate")
@@ -882,7 +903,7 @@ class VideoDownloaderApp(ctk.CTk):
 
         except Exception as e:
             self.progress_entry.configure(state="normal")
-            self.progress_entry.configure(placeholder_text=f"error: {e}")
+            self.progress_entry.configure(placeholder_text=self.text(f"error: {e}"))
             self.progress_entry.configure(state="readonly")
             self.progress_bar.set(0)
             self.progress_bar.stop()
