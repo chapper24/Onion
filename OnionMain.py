@@ -64,6 +64,16 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
+# get thy app data
+def get_user_data_path():
+    app_data = os.getenv('APPDATA')
+    folder = os.path.join(app_data, "Onion")
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    return os.path.join(folder, "Data.json")
+
+
+# the big boi
 class VideoDownloaderApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -127,6 +137,19 @@ class VideoDownloaderApp(ctk.CTk):
                     self.new_entry.insert(0, file_path)
 
                     return file_path
+
+        # the data json path fr
+        user_data_file = get_user_data_path()
+
+        if not os.path.exists(user_data_file):
+
+            with open(resource_path("Data.json"), 'r') as f:
+                default_data = json.load(f)
+            with open(user_data_file, 'w') as f:
+                json.dump(default_data, f)
+
+        with open(user_data_file, 'r') as f:
+            self.data = json.load(f)
 
         # window
         self.title("thy onion")
@@ -671,7 +694,7 @@ class VideoDownloaderApp(ctk.CTk):
         else:
             self.data["base_path"] = self.video_fpb.new_entry.get()
 
-        with open(resource_path("Data.json"), 'w') as f:
+        with open(get_user_data_path(), 'w') as f:
             json.dump(self.data, f, indent=2)
 
 
@@ -914,7 +937,7 @@ class VideoDownloaderApp(ctk.CTk):
         self.data["music_threshold"] = self.music_threshold_entry.get()
 
         # ok now copy the new data to the json!!
-        with open(resource_path("Data.json"), 'w') as f:
+        with open(get_user_data_path(), 'w') as f:
             json.dump(self.data, f, indent=2)
 
         # now delete the window because we saved :)
